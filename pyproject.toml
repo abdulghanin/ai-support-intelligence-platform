@@ -3,4 +3,9 @@ name = "ai-support-intelligence-platform"
 version = "0.1.0"
 description = "AI platform for customer support"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "fastapi[standard]>=0.141.1",
+    "psycopg[binary]>=3.3.6",
+    "qdrant-client>=1.19.1",
+    "sqlalchemy>=2,<3",
+]
