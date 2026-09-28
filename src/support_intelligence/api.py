@@ -8,6 +8,7 @@ from support_intelligence.db import Base, engine, save_feedback, save_message
 from support_intelligence.db import Base, engine, save_message
 from support_intelligence.messages import normalize_message
 from support_intelligence.retrieval import add_document, search_documents
+from support_intelligence.llm import generate_answer
 
 
 @asynccontextmanager
@@ -88,7 +89,7 @@ def chat(request: ChatRequest) -> ChatResponse:
 
     if useful_matches:
         best = useful_matches[0]
-        answer = best["text"]
+        answer = generate_answer(message, best["text"])
         sources = [best["source"]]
     else:
         answer = "I could not find a reliable answer in the support documents."

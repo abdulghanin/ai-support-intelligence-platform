@@ -4,7 +4,11 @@ version = "0.1.0"
 description = "AI platform for customer support"
 requires-python = ">=3.11"
 dependencies = [
+    "anthropic>=1.8.0",
     "fastapi[standard]>=0.141.1",
+    "fastembed>=0.8.1",
+    "google-genai>=2.25.0",
+    "openai>=3.19.2",
     "psycopg[binary]>=3.3.6",
     "qdrant-client>=1.19.1",
     "sqlalchemy>=2,<3",
