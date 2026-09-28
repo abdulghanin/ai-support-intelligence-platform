@@ -2,6 +2,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from support_intelligence.db import Base, engine, save_feedback, save_message
 
 from support_intelligence.db import Base, engine, save_message
 from support_intelligence.messages import normalize_message
@@ -99,3 +101,24 @@ def chat(request: ChatRequest) -> ChatResponse:
         answer=answer,
         sources=sources,
     )
+
+
+class FeedbackRequest(BaseModel):
+    message_id: int
+    rating: int = Field(ge=1, le=5)
+    comment: str | None = None
+
+
+@app.post("/feedback")
+def create_feedback(request: FeedbackRequest) -> dict[str, int]:
+    """Record a 1–5 rating for an existing customer message."""
+    try:
+        saved = save_feedback(
+            message_id=request.message_id,
+            rating=request.rating,
+            comment=request.comment,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    return {"id": saved.id, "message_id": saved.message_id}
